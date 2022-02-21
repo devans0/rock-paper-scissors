@@ -30,7 +30,6 @@ function computerPlay(){
 function playRound(playerSelection){
   const playerSelect = playerSelection.toLowerCase();
   const computerSelect = computerPlay().toLowerCase();
-
   let result;
 
   if(playerSelect === 'rock'){
@@ -77,63 +76,66 @@ function playRound(playerSelection){
 }
 
 function updateResults(gameResult){
-  const resultContainer = document.querySelector('#results');
+  let resultDisplay = document.querySelector('#results');
   let resultMessage;
 
   if(gameResult == 'win'){
     resultMessage = 'Congratulations! You won!';
   } else if (gameResult == 'lose'){
     resultMessage = 'Sorry! You lost, try again!';
-  } else {
+  } else if (gameResult == 'tie'){
     resultMessage = 'It\'s a tie! Try again!';
   }
 
-  resultContainer.textContent = resultMessage;
+  if(gameResult == 'gamewin'){
+    resultMessage = 'You won the game! Well done! Refresh to play again.';
+  } else if (gameResult == 'gamelose'){
+    resultMessage = 'You lost the game, better luck next time. Refresh to play again.';
+  } else if (gameResult == 'gametie'){
+    resultMessage = 'The game is tied! Refresh to play again.';
+  }
+
+  resultDisplay.textContent = resultMessage;
   return;
 }
 
+// Run the game for five rounds, display score and alert user to wins and losses
 const buttons = document.querySelectorAll('button');
+let scoreDisplay = document.querySelector('#score');
+let roundDisplay = document.querySelector('#rounds');
+roundDisplay.textContent = '1';
+
+let playerScore = 0;
+let compScore = 0;
+let roundResult;
+let gameRound = 0;
+
 buttons.forEach(button => {
   button.addEventListener('click', () => {
-    let choice = button.textContent;
-    updateResults(playRound(choice));
+    roundResult = playRound(button.textContent);
+    updateResults(roundResult);
+    gameRound += 1;
+    roundDisplay.textContent = `${gameRound}`;
+
+    if (gameRound === 5){
+      if (playerScore > compScore){
+        updateResults('gamewin');
+      } else if (playerScore < compScore){
+        updateResults('gamelose');
+      } else if (playerScore == compScore){
+        updateResults('gametie');
+      }
+    }
+
+    if (roundResult == 'win'){
+      playerScore += 1;
+      scoreDisplay.textContent = `Player: ${playerScore} Computer: ${compScore}`;
+    } else if (roundResult == 'lose'){
+      compScore += 1;
+      scoreDisplay.textContent = `Player: ${playerScore} Computer: ${compScore}`;
+    } else {
+      scoreDisplay.textContent = `Player: ${playerScore} Computer: ${compScore}`;
+    }
+
   })
 })
-
-
-// Function to run the game for five rounds, displaying the score and prompting the user for
-// each step the game is run
-// function game(){
-//   let playerChoice;
-//   let computerChoice;
-//   let roundResult;
-//   let computerScore = 0;
-//   let playerScore = 0;
-
-//   for(let i = 0; i < 5; i++){
-//     playerChoice = prompt("Rock, Paper or Scissors?");
-//     computerChoice = computerPlay();
-
-//     roundResult = playRound(playerChoice, computerChoice);
-
-//     if (roundResult == 'tie'){
-//       console.log(`This round is a tie! Score is You: ${playerScore}; Computer: ${computerScore}`);
-//     } else if (roundResult == 'win'){
-//       playerScore += 1;
-//       console.log(`You win the round! Score is You: ${playerScore}; Computer: ${computerScore}`);
-//     } else if (roundResult == 'lose'){
-//       computerScore += 1;
-//       console.log(`You lose the round! Score is You: ${playerScore}; Computer: ${computerScore}`);
-//     }
-//   }
-
-//   if (playerScore > computerScore){
-//     console.log("Congratulations, you won the game!");
-//   } else if (computerScore > playerScore){
-//     console.log("You lost the game! Better luck next time!");
-//   } else {
-//     console.log("The game is a tie!");
-//   }
-// }
-
-//game();
