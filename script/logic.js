@@ -76,11 +76,27 @@ function playRound(playerSelection){
   return result;
 }
 
+function updateResults(gameResult){
+  const resultContainer = document.querySelector('#results');
+  let resultMessage;
+
+  if(gameResult == 'win'){
+    resultMessage = 'Congratulations! You won!';
+  } else if (gameResult == 'lose'){
+    resultMessage = 'Sorry! You lost, try again!';
+  } else {
+    resultMessage = 'It\'s a tie! Try again!';
+  }
+
+  resultContainer.textContent = resultMessage;
+  return;
+}
+
 const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
   button.addEventListener('click', () => {
     let choice = button.textContent;
-    console.log(playRound(choice));
+    updateResults(playRound(choice));
   })
 })
 
